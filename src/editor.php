@@ -29,9 +29,25 @@
                 if (isset($_POST['title']) && !preg_match("/^\\s*$/", $_POST['title'])) {
                     $article['title'] = trim(preg_replace("/[\\v\\t]/", "", $_POST['title']));
                 }
-                $article['text'] = trim($_POST['text']);
+                $oldText = $article['text'];
+                $stats1 = Controller::getStats($oldText);
+                $newText = trim($_POST['text']);
+                $stats2 = Controller::getStats($newText);
+                $article['text'] = $newText;
                 $article['modified_on'] = date("Y-m-d H:i:s");
                 Controller::saveArticle($article, $file);
+                
+                $line = "[".date("Y-m-d H:i:s")."] Updated article $file: ";
+                foreach ($stats1 as $key => $value) {
+                    $delta = $stats2[$key] - $stats1[$key];
+                    $sign = $delta > 0 ? '+' : ($delta < 0 ? '-' : '');
+                    $a = explode('\\', $key);
+                    $line .= $sign . abs($delta) . ' ' . strtolower(array_pop($a)) . 's, ';
+                }
+                $line = substr($line, 0, -2);
+                $logPath = Controller::getArticlesDirectory() . '../audit.log';
+                file_put_contents($logPath, $line . "\n", FILE_APPEND | LOCK_EX);
+
                 echo "Success";
             } else {
                 echo "Not found.";

@@ -1,6 +1,11 @@
 {
     "require-dev": {
         "phpunit/phpunit": "^9.6"
+    },
+    "require": {
+        "league/commonmark": "^2.4"
+    },
+    "autoload": {
+        "classmap": ["vendor"]
     }
- }
- 
+}
