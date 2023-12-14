@@ -111,6 +111,8 @@ class Controller {
             $stats[$type] = $count;
         }
 
+        $stats['words'] = preg_split("/\\s+/", self::getStringContent($document));
+
         return $stats;
     }
 
@@ -118,6 +120,9 @@ class Controller {
         $text = "";
         foreach ($document->iterator() as $node) {
             if ($node instanceOf League\CommonMark\Node\Inline\Text) {
+                if (preg_match("/^\\s*$/", $node->getLiteral())) {
+                    continue;
+                }
                 $text .= $node->getLiteral() . ' ';
             }
         }

@@ -3,7 +3,8 @@
         "phpunit/phpunit": "^9.6"
     },
     "require": {
-        "league/commonmark": "^2.4"
+        "league/commonmark": "^2.4",
+        "diff/diff": "^3.3"
     },
     "autoload": {
         "classmap": ["vendor"]
