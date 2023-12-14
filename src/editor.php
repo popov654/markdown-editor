@@ -26,6 +26,9 @@
                 // Sanitize user input
                 $file = preg_replace("/[^0-9a-z\._-]/i", "", $_REQUEST['article']);
                 $article = Controller::parseArticle($file);
+                if (isset($_POST['title']) && !preg_match("/^\\s*$/", $_POST['title'])) {
+                    $article['title'] = trim(preg_replace("/[\\v\\t]/", "", $_POST['title']));
+                }
                 $article['text'] = trim($_POST['text']);
                 $article['modified_on'] = date("Y-m-d H:i:s");
                 Controller::saveArticle($article, $file);

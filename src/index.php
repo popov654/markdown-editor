@@ -48,9 +48,50 @@
                 padding: 8px 58px 18px;
                 width: 68%;
             }
-            .editor > .title {
+            .editor form > :first-child {
+                padding-right: 28px;
+            }
+            .editor .title {
                 margin: 2px 0px 12px;
                 font-weight: 500;
+                display: inline;
+            }
+            #article_title_input {
+                display: none;
+                font-size: 1.15em;
+                padding: 3px 5px;
+                border: 1.5px solid #cfcfcf;
+                border-radius: 4px;
+                margin: 0px 4px 0px 0px;
+                min-width: calc(80% - 34px);
+            }
+            #titleEditBtn {
+                display: inline-block;
+                vertical-align: middle;
+                margin: 4px;
+                padding: 5px 3px;
+                width: 30px;
+                height: 28px;
+                border-radius: 4px;
+                position: relative;
+                top: -7px;
+                border: none;
+                background: none;
+                cursor: pointer;
+            }
+            #titleEditBtn:focus {
+                outline-color: #35ccff;
+                outline-offset: 1px;
+            }
+            #titleEditBtn > svg {
+                fill: #bdbdc3;
+                margin-left: -1px;
+            }
+            #titleEditBtn:hover {
+                background: #e8e8e8;
+            }
+            #titleEditBtn:hover > svg {
+                fill: #c3c3c8;
             }
             #article-content {
                 font-size: 1.08em;
@@ -102,10 +143,50 @@
                 }
                 document.getElementById('ifr').onload = function() {
                     if (this.contentWindow.location.href == 'about:blank') {
-                        return
+                        return;
                     }
                     document.getElementById('success').style.opacity = '1'
                 }
+                document.getElementById('titleEditBtn').onclick = function(event) {
+                    if (document.getElementById('article_title_input').style.display == '') {
+                        document.getElementById('articleTitle').style.display = 'none'
+                        document.getElementById('article_title_input').style.display = 'inline-block'
+                        document.getElementById('article_title_input').focus()
+                    } else {
+                        if (timer) {
+                            clearTimeout(timer);
+                            timer = null;
+                        }
+                        document.getElementById('articleTitle').textContent = document.getElementById('article_title_input').value
+                        document.getElementById('articleTitle').style.display = ''
+                        document.getElementById('article_title_input').style.display = ''
+                    }
+                    event.preventDefault();
+                }
+
+                var timer = null;
+                var flag = false;
+
+                document.getElementById('article_title_input').onblur = 
+                document.getElementById('article_title_input').onkeyup =
+                    function(event) {
+                        if (flag) {
+                            flag = false;
+                            return;
+                        }
+                        if (!event.key || event.key == "Enter") {
+                            flag = true;
+                            timer = setTimeout(() => document.getElementById('titleEditBtn').click(), 100);
+                        }
+                        if (event.key && event.key == "Enter") {
+                            event.preventDefault();
+                        }
+                    }
+                    document.getElementById('article_title_input').onkeydown = function(event) {
+                        if (event.key == "Enter") {
+                            event.preventDefault();
+                        }
+                    }
             });
 
             function loadArticle(el) {
@@ -125,6 +206,7 @@
                     .then(res => res.text())
                     .then(content => {
                         document.getElementById('articleTitle').textContent = el.childNodes[0].textContent
+                        document.getElementById('article_title_input').value = el.childNodes[0].textContent
                         document.getElementById('article_id').value = el.getAttribute('data-href');
                         document.getElementById('article-content').value = content;
                     });
@@ -148,12 +230,12 @@
             </nav>
             <div id="main">
                 <div class="editor">
-                    <h1 class="title" id="articleTitle">Article title</h1>
                     <form action="editor.php?action=update" target="ifr" method="POST">
+                        <div><h1 class="title" id="articleTitle">Article title</h1><input name="title" id="article_title_input" /><button id="titleEditBtn"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#bdbdc3" version="1.1" id="Capa_1" width="15px" height="15px" viewBox="0 0 528.899 528.899" xml:space="preserve"><g><path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981   c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611   C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069   L27.473,390.597L0.3,512.69z"/></g></svg></button></div>
                         <div class="line"><textarea name="text" id="article-content"></textarea></div>
                         <div class="line"><input type="submit" value="Save" /></div>
                         <input type="hidden" name="article" id="article_id" />
-                        <div id="success">Article was saved</div>
+                        <div id="success">Article has been saved</div>
                     </form>
                     <iframe name="ifr" id="ifr" style="display: none; visibility: hidden"></iframe>
                 </div>
