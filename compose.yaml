@@ -17,6 +17,9 @@ services:
     environment:
       XDEBUG_MODE: debug
       XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
+    volumes:
+      - images:/var/www/html/images
+      - articles:/var/www/html/articles
     develop:
       watch:
         - action: sync
@@ -27,9 +30,15 @@ services:
       context: .
       target: final
     command: "scripts/convert.sh"
+    volumes:
+      - images:/var/www/html/images
+      - articles:/var/www/html/articles
     depends_on:
       server:
         condition: service_started
+volumes:
+  images:
+  articles:
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

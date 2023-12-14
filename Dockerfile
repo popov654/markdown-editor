@@ -32,9 +32,8 @@ COPY ./src /var/www/html
 COPY ./articles /var/www/html/articles
 COPY ./uploads /var/www/html/uploads
 COPY ./images /var/www/html/images
-RUN apt-get update && apt-get install -y webp && apt-get clean
+RUN apt-get update && apt-get install -y imagemagick && apt-get install -y webp && apt-get clean
 COPY convert.sh /var/www/html/scripts/convert.sh
-#ENTRYPOINT "./convert.sh"
 
 FROM base as development
 COPY ./tests /var/www/html/tests

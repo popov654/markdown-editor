@@ -1,10 +1,15 @@
+#!/bin/bash
+
 for file in uploads/*; do
-    filename=$(basename "$file" | cut -d. -f1)
-    cwebp -q 80 "$file" -o "images/$filename.webp";
-    old_path=$(echo $file | sed 's/\//\\\//g');
+    filename=$(basename "$file" | cut -d. -f1);
+    echo -n "Running convert '$file' -quality 80 'images/$filename.webp'... ";
+    convert "$file" -quality 80 "images/$filename.webp";
+    echo "done.";
+    old_path_enc=$(echo $file | sed 's/\//\\\//g' | sed 's/ /%20/g');
+    filename_enc=$(echo $filename | sed 's/ /%20/g');
     sleep 1;
     # command="Command is s/$old_path/images\/$filename.webp/g";
     for article in articles/*; do
-        sed -i "s/$old_path/images\/$filename.webp/g" $article
+        sed -i "s/$old_path_enc/images\/$filename_enc.webp/g" $article;
     done
 done
