@@ -27,10 +27,14 @@ RUN --mount=type=bind,source=./composer.json,target=composer.json \
     composer install --no-interaction
 
 FROM php:8.2-apache as base
-RUN docker-php-ext-install pdo pdo_mysql
+# RUN docker-php-ext-install pdo pdo_mysql
 COPY ./src /var/www/html
 COPY ./articles /var/www/html/articles
 COPY ./uploads /var/www/html/uploads
+COPY ./images /var/www/html/images
+RUN apt-get update && apt-get install -y webp && apt-get clean
+COPY convert.sh /var/www/html/scripts/convert.sh
+#ENTRYPOINT "./convert.sh"
 
 FROM base as development
 COPY ./tests /var/www/html/tests
@@ -48,6 +52,7 @@ RUN ./vendor/bin/phpunit tests/HelloWorldTest.php
 FROM base as final
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --from=prod-deps app/vendor/ /var/www/html/vendor
+RUN chown -R www-data:www-data /var/www
 USER www-data
 
 # Copy app files from the app directory.
