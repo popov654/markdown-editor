@@ -58,7 +58,7 @@ switch ($_GET['action']) {
             $logPath = Controller::getArticlesDirectory() . '../audit.log';
             file_put_contents($logPath, $line . "\n", FILE_APPEND | LOCK_EX);
 
-            echo "Success";
+            echo '{"result": "success", "timestamp": "'.$article['modified_on'].'"}';
         } else {
             echo "Not found.";
         }

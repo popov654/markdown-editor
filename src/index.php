@@ -113,16 +113,23 @@
                 color: #fcfcfc;
                 text-shadow: 1px 1px #31495a, -1px 1px #7993c0;
             }
-            #success {
+            #success, #error {
                 box-sizing: border-box;
                 opacity: 0;
-                border: 2px solid #517c85;
-                background: #92d3dc;
                 border-radius: 6px;
                 color: #2e3537;
                 padding: 10px 18px;
                 width: 80%;
                 margin: 30px 0px 20px;
+                transition: opacity 0.18s;
+            }
+            #success {
+                border: 2px solid #517c85;
+                background: #92d3dc;
+            }
+            #error {
+                border: 2px solid #8d5c68;
+                background: #e2a8b0;
             }
         </style>
         <script>
@@ -145,7 +152,26 @@
                     if (this.contentWindow.location.href == 'about:blank') {
                         return;
                     }
-                    document.getElementById('success').style.opacity = '1'
+                    try {
+                        var result = JSON.parse(this.contentWindow.document.body.textContent);
+                        if (result.result == 'success') {
+                            document.getElementById('error').style.display = 'none'
+                            document.getElementById('error').style.opacity = '0'
+                            document.getElementById('success').style.display = ''
+                            setTimeout(() => document.getElementById('success').style.opacity = '1', 100)
+                            document.querySelector('#leftCol > .item.active').childNodes[0].textContent = document.getElementById('articleTitle').textContent
+                            if (result.timestamp) {
+                                document.querySelector('#leftCol > .item.active').children[0].textContent = 'Last updated on ' + result.timestamp
+                            }
+                        } else {
+                            document.getElementById('success').style.display = 'none'
+                            document.getElementById('success').style.opacity = '0'
+                            document.getElementById('error').style.display = ''
+                            setTimeout(() => document.getElementById('error').style.opacity = '1', 100)
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }
                 document.getElementById('titleEditBtn').onclick = function(event) {
                     if (document.getElementById('article_title_input').style.display == '') {
@@ -236,6 +262,7 @@
                         <div class="line"><input type="submit" value="Save" /></div>
                         <input type="hidden" name="article" id="article_id" />
                         <div id="success">Article has been saved</div>
+                        <div id="error">An error has occured</div>
                     </form>
                     <iframe name="ifr" id="ifr" style="display: none; visibility: hidden"></iframe>
                 </div>
