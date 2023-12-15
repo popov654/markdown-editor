@@ -10,7 +10,7 @@
             "request": "launch",
             "port": 9003,
             "pathMappings": {
-                "/var/www/html": "${workspaceFolder}\\src"
+                "/var/www/html": "${workspaceFolder}/src"
             },
         },
         {
@@ -39,7 +39,7 @@
                 "localhost:8000"
             ],
             "program": "",
-            "cwd": "${workspaceRoot}\\src",
+            "cwd": "${workspaceRoot}/src",
             "port": 9003,
             "serverReadyAction": {
                 "pattern": "Development Server \\(http://localhost:([0-9]+)\\) started",

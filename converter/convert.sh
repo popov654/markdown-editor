@@ -8,7 +8,7 @@ for file in uploads/*; do
     old_path_enc=$(echo $file | sed 's/\//\\\//g' | sed 's/ /%20/g');
     filename_enc=$(echo $filename | sed 's/ /%20/g');
     sleep 1;
-    # command="Command is s/$old_path/images\/$filename.webp/g";
+    # command="Command is s/$old_path_enc/images\/$filename_enc.webp/g";
     for article in articles/*; do
         sed -i "s/$old_path_enc/images\/$filename_enc.webp/g" $article;
     done
