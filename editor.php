@@ -2,7 +2,8 @@
 
 use Diff\ArrayComparer\StrictArrayComparer;
 
-require "controller.php";
+require "vendor/autoload.php";
+require "src/controller.php";
 
 if (!isset($_GET['action'])) {
     $_GET['action'] = 'get';

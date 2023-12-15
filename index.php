@@ -1,5 +1,6 @@
 <?php
-    require "controller.php";
+    require "vendor/autoload.php";
+    require "src/controller.php";
 ?>
 <html>
     <head>

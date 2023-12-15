@@ -1,7 +1,5 @@
 <?php
 
-require Controller::getRootDirectory() . 'vendor/autoload.php';
-
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -18,18 +16,9 @@ use League\CommonMark\Parser\MarkdownParser;
 use League\CommonMark\Node\Block\Document;
 
 class Controller {
-    public static function getRootDirectory(): String {
-        if (preg_match("/html$/", getcwd())) {
-            return '';
-        }
-        return '../';
-    }
 
     public static function getArticlesDirectory(): String {
-        if (preg_match("/html$/", getcwd())) {
-            return 'articles/';
-        }
-        return '../articles/';
+        return getcwd() . '/articles/';
     }
 
     public static function getArticlesList(): Array {
